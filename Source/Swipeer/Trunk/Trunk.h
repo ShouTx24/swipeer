@@ -1,3 +1,5 @@
+// Property of Kamil Bochenski. All right's reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -52,8 +54,4 @@ public:
 	UPROPERTY(EditAnywhere)
 	float turnSpeed{ 1.f };
 
-	UFUNCTION(CallInEditor)
-	void R();
-	UFUNCTION(CallInEditor)
-	void L();
 };

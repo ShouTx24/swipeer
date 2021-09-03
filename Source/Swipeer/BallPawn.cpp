@@ -1,6 +1,5 @@
 // Property of Kamil Bochenski. All right's reserved.
 
-
 #include "BallPawn.h"
 
 ABallPawn::ABallPawn()
@@ -18,7 +17,6 @@ void ABallPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ABallPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ABallPawn::MoveForward()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }

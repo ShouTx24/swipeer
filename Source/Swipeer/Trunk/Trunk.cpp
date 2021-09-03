@@ -1,3 +1,5 @@
+// Property of Kamil Bochenski. All right's reserved.
+
 #include "Trunk.h"
 #include "TrunkMainPart.h"
 
@@ -56,7 +58,6 @@ void ATrunk::Tick(float DeltaTime)
 		AddActorLocalRotation(FQuat(FRotator(turnValue, 0, 0)));
 		turnProgress++;
 	}
-
 }
 
 UStaticMesh* ATrunk::GetStaticMesh(int type)
@@ -72,14 +73,4 @@ void ATrunk::Turn(int Direction)
 	bIsMoving = true;
 	turnValue = 45 / turnSpeed * Direction;
 	turnProgress = 0;
-}
-
-void ATrunk::R()
-{
-	Turn(1);
-}
-
-void ATrunk::L()
-{
-	Turn(-1);
 }

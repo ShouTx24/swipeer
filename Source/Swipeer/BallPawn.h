@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Property of Kamil Bochenski. All right's reserved.
 
 #pragma once
 
@@ -16,5 +16,6 @@ public:
 	ABallPawn();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void MoveForward();
+
 };
