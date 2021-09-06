@@ -6,8 +6,8 @@
 ATrunk::ATrunk()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	USceneComponent* NewRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRootComponent"));
-	RootComponent = NewRoot;
+	
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	
 	UTrunkMainPart* NewPart = CreateDefaultSubobject<UTrunkMainPart>(TEXT("DefaultPartComponent"));
 	NewPart->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepRelativeTransform);
@@ -27,7 +27,6 @@ void ATrunk::BeginPlay()
 	if (!TrunkMainPartModel || !TrunkWallModel) return;
 	
 	turnSpeed *= 60;
-
 	while(PartCounter < 30) NewPart();
 }
 

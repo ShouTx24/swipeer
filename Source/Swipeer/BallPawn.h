@@ -16,6 +16,6 @@ public:
 	ABallPawn();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	void MoveForward();
+	void MoveForward(float DeltaTime);
 
 };
