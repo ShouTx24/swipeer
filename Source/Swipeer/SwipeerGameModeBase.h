@@ -15,5 +15,6 @@ class SWIPEER_API ASwipeerGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 	ASwipeerGameModeBase(const FObjectInitializer& ObjectInitializer);
-	
+public:
+
 };
