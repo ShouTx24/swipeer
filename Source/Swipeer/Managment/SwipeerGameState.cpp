@@ -21,5 +21,6 @@ void ASwipeerGameState::BeginPlay()
 void ASwipeerGameState::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	GameMode->BBallReachNextElement(Pawn, Trunk);
+	if (GameMode->BBallReachNextElement(Pawn, Trunk)) Score++;
+	GEngine->AddOnScreenDebugMessage(4, 10, FColor::Emerald, FString::FromInt(Score));
 }

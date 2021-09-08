@@ -15,15 +15,11 @@ ASwipeerGameModeBase::ASwipeerGameModeBase(const FObjectInitializer& ObjectIniti
 
 bool ASwipeerGameModeBase::BBallReachNextElement(APawn* Ball, ATrunk* Trunk)
 {
-	if (Ball->GetActorLocation().Y >= Trunk->GetActorLocation().Y + (Trunk->GetActorScale().X * 500 * (Trunk->PartCounter - 30)))
+	if (Ball->GetActorLocation().Y >= Trunk->GetActorLocation().Y + (Trunk->GetActorScale().X * 500 * (Trunk->PartCounter - 29)))
 	{
-		
 		Trunk->RemovePart();
-		if (Trunk->PartCounter > 35)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, FString("Score!"));
-		}
-		return true;
+		if (Trunk->PartCounter > 34) return true;
+		else return false;
 	}
 	else
 	{

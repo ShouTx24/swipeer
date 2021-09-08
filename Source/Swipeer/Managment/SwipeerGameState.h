@@ -21,4 +21,5 @@ class SWIPEER_API ASwipeerGameState : public AGameStateBase
 	APawn* Pawn;
 	ATrunk* Trunk;
 	ASwipeerGameModeBase* GameMode;
+	int Score{ 0 };
 };
