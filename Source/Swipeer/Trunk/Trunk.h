@@ -47,6 +47,9 @@ public:
 	
 	void Turn(int Direction);
 
+	UPROPERTY(EditAnywhere)
+	TArray<UMaterial*>Materials;
+	
 	bool bIsMoving{ false };
 	float turnValue{ 0 };
 	float turnProgress{ 0 };

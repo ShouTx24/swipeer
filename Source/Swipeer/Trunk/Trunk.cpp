@@ -37,6 +37,7 @@ void ATrunk::NewPart()
 	NewPart->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	NewPart->RegisterComponent();
 	TrunkParts.Add(NewPart);
+	if (PartCounter %2 != 0) NewPart->SetMaterial(0, Materials[0]);
 	PartCounter++;
 }
 

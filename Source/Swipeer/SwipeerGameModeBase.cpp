@@ -17,6 +17,7 @@ bool ASwipeerGameModeBase::BBallReachNextElement(APawn* Ball, ATrunk* Trunk)
 {
 	if (Ball->GetActorLocation().Y >= Trunk->GetActorLocation().Y + (Trunk->GetActorScale().X * 500 * (Trunk->PartCounter - 30)))
 	{
+		
 		Trunk->RemovePart();
 		if (Trunk->PartCounter > 35)
 		{
