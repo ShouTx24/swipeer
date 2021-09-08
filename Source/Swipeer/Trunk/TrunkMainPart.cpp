@@ -27,7 +27,7 @@ void UTrunkMainPart::BeginPlay()
 	Parts = FMath::Log2(Parts / 10);
 	
 	// Setup starting point.
-	if (Parts < 1 && Cast<ATrunk>(GetOwner())->PartCounter > 5) Parts = 1;
+	if (Parts < 1 && Cast<ATrunk>(GetOwner())->PartCounter >= 5) Parts = 1;
 	// Ensure that game is always playable and you can not find part full of walls.
 	else if (Parts > 5) Parts = 5;
 

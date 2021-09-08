@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Trunk/Trunk.h"
 #include "SwipeerGameModeBase.generated.h"
 
 /**
@@ -16,5 +17,5 @@ class SWIPEER_API ASwipeerGameModeBase : public AGameModeBase
 
 	ASwipeerGameModeBase(const FObjectInitializer& ObjectInitializer);
 public:
-
+	bool BBallReachNextElement(APawn* Ball, ATrunk* Trunk);
 };

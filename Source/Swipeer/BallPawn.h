@@ -17,5 +17,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void MoveForward(float DeltaTime);
+	int score{ 0 };
 
 };
