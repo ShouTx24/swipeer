@@ -43,7 +43,13 @@ void ATrunk::NewPart()
 
 void ATrunk::RemovePart()
 {
-	TrunkParts[0]->GetChildComponent(0)->DestroyComponent();
+	TArray<USceneComponent*> ChildrenComponents;
+	TrunkParts[0]->GetChildrenComponents(true, ChildrenComponents);
+	while (ChildrenComponents.IsValidIndex(0))
+	{
+		ChildrenComponents[0]->DestroyComponent();
+		ChildrenComponents.RemoveAt(0);
+	}
 	TrunkParts[0]->DestroyComponent(false);
 	TrunkParts.RemoveAt(0); 
 	NewPart();

@@ -17,6 +17,9 @@ void UTrunkMainPart::BeginPlay()
 	if (!Mesh) return;
 	this->SetStaticMesh(Mesh);
 	
+	// Setup starting point.
+	if (Cast<ATrunk>(GetOwner())->PartCounter < 5) return;
+
 	//Create Instanced Static Mesh
 	UTrunkWall* NewWall = NewObject<UTrunkWall>(this);
 	NewWall->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
@@ -27,7 +30,7 @@ void UTrunkMainPart::BeginPlay()
 	Parts = FMath::Log2(Parts / 10);
 	
 	// Setup starting point.
-	if (Parts < 1 && Cast<ATrunk>(GetOwner())->PartCounter >= 5) Parts = 1;
+	if (Parts < 1) Parts = 1;
 	// Ensure that game is always playable and you can not find part full of walls.
 	else if (Parts > 5) Parts = 5;
 
@@ -37,13 +40,19 @@ void UTrunkMainPart::BeginPlay()
 	int number{ 0 };
 	Parts = FMath::RandRange(Parts, Parts + 2);
 	
-	// Place correct number of walls.
-	for (int i{ 0 }; i < Parts; i++)
+	// Place correct number of walls & essence.
+	for (int i{ 0 }; i <= Parts + 1; i++)
 	{
 		number = FMath::RandRange(0, possibles.Num() - 1);
 		number = possibles[number];
 		possibles.Remove(possibles.Find(number));
-		NewWall->AddInstance(GetSocketTransform(FName(FString::FromInt(number))));
+		if (i >= Parts + 1)
+		{
+			UEssence* Essence = NewObject<UEssence>(this);
+			Essence->AttachTo(this, FName(FString::FromInt(number)));
+			Essence->RegisterComponent();
+		}
+		else NewWall->AddInstance(GetSocketTransform(FName(FString::FromInt(number))));
 	}
 }
 

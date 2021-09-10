@@ -14,4 +14,5 @@ class SWIPEER_API UEssence : public UParticleSystemComponent
 {
 	GENERATED_BODY()
 	
+	UEssence(const FObjectInitializer& ObjectInitializer);
 };
