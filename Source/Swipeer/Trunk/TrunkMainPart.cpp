@@ -37,16 +37,15 @@ void UTrunkMainPart::BeginPlay()
 	// Ensure that u cannot draw the same wall spot twice.
 	TArray<int> possibles;
 	for (int i{ 0 }; i < 8; i++) possibles.Add(i);
-	int number{ 0 };
 	Parts = FMath::RandRange(Parts, Parts + 2);
 	
 	// Place correct number of walls & essence.
-	for (int i{ 0 }; i <= Parts + 1; i++)
+	for (int i{ 0 }; i <= Parts; i++)
 	{
-		number = FMath::RandRange(0, possibles.Num() - 1);
-		number = possibles[number];
-		possibles.Remove(possibles.Find(number));
-		if (i >= Parts + 1)
+		int id = FMath::RandRange(0, possibles.Num() - 1);
+		int number = possibles[id];
+		possibles.RemoveAt(id);
+		if (i >= Parts)
 		{
 			UEssence* Essence = NewObject<UEssence>(this);
 			Essence->AttachTo(this, FName(FString::FromInt(number)));
