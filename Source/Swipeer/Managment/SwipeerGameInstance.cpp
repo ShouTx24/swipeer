@@ -3,3 +3,7 @@
 
 #include "SwipeerGameInstance.h"
 
+void USwipeerGameInstance::Init()
+{
+	Super::Init();
+}

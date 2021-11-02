@@ -2,6 +2,8 @@
 
 #include "BallPawn.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Managment/SwipeerGameState.h"
 #include "Components/StaticMeshComponent.h"
 
 ABallPawn::ABallPawn()
@@ -32,7 +34,10 @@ void ABallPawn::Tick(float DeltaTime)
 
 void ABallPawn::MoveForward(float DeltaTime)
 {
-	FHitResult Hit;
-	SetActorLocation(GetActorLocation() + FVector(0, 1500 * DeltaTime, 0), true, &Hit);
-	if (Hit.IsValidBlockingHit()) GEngine->AddOnScreenDebugMessage(5, 10, FColor::Red, FString("Game Over!"));
+	SetActorLocation(GetActorLocation() + FVector(0, 1500 * DeltaTime, 0), true);
+}
+
+void ABallPawn::NotifyHit(class UPrimitiveComponent* MyComp,AActor* Other,class UPrimitiveComponent* OtherComp,bool bSelfMoved,FVector HitLocation,FVector HitNormal,FVector NormalImpulse,const FHitResult& Hit)
+{
+	Cast<ASwipeerGameState>(UGameplayStatics::GetGameState(GWorld))->GameOver(Cast<APawn>(MyComp->GetOwner()));
 }

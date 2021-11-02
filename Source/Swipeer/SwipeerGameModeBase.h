@@ -18,4 +18,5 @@ class SWIPEER_API ASwipeerGameModeBase : public AGameModeBase
 	ASwipeerGameModeBase(const FObjectInitializer& ObjectInitializer);
 public:
 	bool BBallReachNextElement(APawn* Ball, ATrunk* Trunk);
+	void GameOver(APawn* Player);
 };

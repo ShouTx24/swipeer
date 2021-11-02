@@ -12,9 +12,9 @@ ASwipeerGameState::ASwipeerGameState()
 void ASwipeerGameState::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if (!GWorld) return;
 	Pawn = UGameplayStatics::GetPlayerPawn(GWorld, 0);
-	Trunk = Cast<ATrunk>(UGameplayStatics::GetActorOfClass(GetWorld(), ATrunk::StaticClass()));
+	Trunk = Cast<ATrunk>(UGameplayStatics::GetActorOfClass(GWorld, ATrunk::StaticClass()));
 	GameMode = Cast<ASwipeerGameModeBase>(UGameplayStatics::GetGameMode(GWorld));
 
 }
@@ -22,5 +22,16 @@ void ASwipeerGameState::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (GameMode->BBallReachNextElement(Pawn, Trunk)) Score++;
-	GEngine->AddOnScreenDebugMessage(4, 10, FColor::Emerald, FString::FromInt(Score));
+	GEngine->AddOnScreenDebugMessage(4, 4, FColor::Emerald, FString("Score: " + FString::FromInt(Score)));
+}
+
+void ASwipeerGameState::GameOver(APawn* Player)
+{
+	// Call GameOver from GameMode object.
+	GameMode->GameOver(Player);
+}
+
+int ASwipeerGameState::GetScore()
+{
+	return Score;
 }

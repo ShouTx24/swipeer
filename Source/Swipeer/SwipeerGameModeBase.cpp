@@ -4,6 +4,7 @@
 #include "SwipeerGameModeBase.h"
 #include "BallPawn.h"
 #include "SwipeerPlayerController.h"
+#include "Managment/SwipeerGameInstance.h"
 #include "Managment/SwipeerGameState.h"
 
 ASwipeerGameModeBase::ASwipeerGameModeBase(const FObjectInitializer& ObjectInitializer)
@@ -25,5 +26,22 @@ bool ASwipeerGameModeBase::BBallReachNextElement(APawn* Ball, ATrunk* Trunk)
 	{
 		return false;
 	}
+
+}
+
+void ASwipeerGameModeBase::GameOver(APawn* Player)
+{
+	//Stops pawn form moving and creating additional GameOver event executions.
+	
+	Cast<ABallPawn>(Player)->SetActorTickEnabled(false);
+
+	// Check if player beats its former record.
+	
+	int currentRecord = GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord;
+	int currentScore = GetGameState<ASwipeerGameState>()->GetScore();
+	if (currentScore > currentRecord) GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Purple, "New Record!");
+
+	// User Interface
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Purple, "GameMode Gameover");
 
 }

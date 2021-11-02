@@ -22,4 +22,13 @@ class SWIPEER_API ASwipeerGameState : public AGameStateBase
 	ATrunk* Trunk;
 	ASwipeerGameModeBase* GameMode;
 	int Score{ 0 };
+	int Essence{ 0 };
+
+public:
+	
+	UFUNCTION()
+	void GameOver(APawn* PlayerPawn);
+	
+	UFUNCTION()
+	int GetScore();
 };
