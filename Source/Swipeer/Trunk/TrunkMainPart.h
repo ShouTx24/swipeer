@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Trunk.h"
-#include "Essence.h"
 #include "TrunkMainPart.generated.h"
 
 

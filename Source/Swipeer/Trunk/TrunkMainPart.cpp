@@ -2,6 +2,7 @@
 
 #include "TrunkMainPart.h"
 #include "TrunkWall.h"
+#include "Essence.h"
 
 UTrunkMainPart::UTrunkMainPart()
 {
