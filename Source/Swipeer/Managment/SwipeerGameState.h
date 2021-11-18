@@ -31,4 +31,10 @@ public:
 	
 	UFUNCTION()
 	int GetScore();
+
+	UFUNCTION()
+	int GetEssence();
+
+	UFUNCTION()
+	void GiveEssence();
 };

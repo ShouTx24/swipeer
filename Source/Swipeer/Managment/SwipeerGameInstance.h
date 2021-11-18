@@ -21,7 +21,7 @@ struct FPlayerData
 	int playerRecord;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int playerMoney;
+	int playerEssence;
 	
 	UPROPERTY(BlueprintReadWrite)
 	bool premiumUser;
@@ -30,7 +30,7 @@ struct FPlayerData
 	{
 		playerName = FName("Player");
 		playerRecord = 0;
-		playerMoney = 0;
+		playerEssence = 0;
 		premiumUser = false;
 	}
 

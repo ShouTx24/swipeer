@@ -35,3 +35,13 @@ int ASwipeerGameState::GetScore()
 {
 	return Score;
 }
+
+int ASwipeerGameState::GetEssence()
+{
+	return Essence;
+}
+
+void ASwipeerGameState::GiveEssence()
+{
+	Essence++;
+}
