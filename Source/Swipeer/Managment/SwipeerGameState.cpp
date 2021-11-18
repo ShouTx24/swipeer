@@ -3,6 +3,8 @@
 
 #include "SwipeerGameState.h"
 #include "Kismet/GameplayStatics.h"
+#include "SwipeerGameInstance.h"
+#include "../SwipeerPlayerController.h"
 
 ASwipeerGameState::ASwipeerGameState()
 {
@@ -21,8 +23,11 @@ void ASwipeerGameState::BeginPlay()
 void ASwipeerGameState::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (GameMode->BBallReachNextElement(Pawn, Trunk)) Score++;
-	GEngine->AddOnScreenDebugMessage(4, 4, FColor::Emerald, FString("Score: " + FString::FromInt(Score)));
+	if (GameMode->BBallReachNextElement(Pawn, Trunk))
+	{
+		Score++;
+		Cast<ASwipeerPlayerController>(GWorld->GetFirstPlayerController())->RunTimeUI->UpdateScore(GetScore());
+	}
 }
 
 void ASwipeerGameState::GameOver(APawn* Player)
@@ -44,4 +49,5 @@ int ASwipeerGameState::GetEssence()
 void ASwipeerGameState::GiveEssence()
 {
 	Essence++;
+	Cast<ASwipeerPlayerController>(GWorld->GetFirstPlayerController())->RunTimeUI->UpdateEssence(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence+Essence);
 }

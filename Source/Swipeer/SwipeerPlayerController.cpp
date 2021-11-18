@@ -1,11 +1,24 @@
 // Property of Kamil Bochenski. All right's reserved.
 
 #include "SwipeerPlayerController.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Managment/SwipeerGameInstance.h"
+
+ASwipeerPlayerController::ASwipeerPlayerController()
+{
+	ConstructorHelpers::FClassFinder<UUserWidget> RunTimeUIClassBP(TEXT("/Game/UI/RunTimeUI"));
+	RunTimeUIClass = RunTimeUIClassBP.Class;
+}
 
 void ASwipeerPlayerController::BeginPlay()
 {
 	Trunk = Cast<ATrunk>(UGameplayStatics::GetActorOfClass(GetWorld(), ATrunk::StaticClass()));
+	if (!RunTimeUIClass) return;
+	RunTimeUI = Cast<URunTimeUI>(CreateWidget<UUserWidget>(this, RunTimeUIClass));
+	RunTimeUI->AddToViewport();
+	RunTimeUI->SetRecord(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord);
+	RunTimeUI->UpdateEssence(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence);
 }
 
 void ASwipeerPlayerController::SetupInputComponent()
@@ -31,7 +44,6 @@ void ASwipeerPlayerController::GetSwipeDirection()
 	bool bTouchActive;
 	GetInputTouchState(ETouchIndex::Touch1, CurrentLocation.X, CurrentLocation.Y, bTouchActive);
 	if (!bTouchActive) return;
-
 
 	if (TouchStartLocation.X - 40 >= CurrentLocation.X)
 	{

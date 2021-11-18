@@ -38,7 +38,6 @@ void ASwipeerGameModeBase::GameOver(APawn* Player)
 	int currentScore = GetGameState<ASwipeerGameState>()->GetScore();
 	if (currentScore > currentRecord)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Purple, "New Record!");
 		GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord = currentScore;
 	}
 
@@ -47,7 +46,6 @@ void ASwipeerGameModeBase::GameOver(APawn* Player)
 
 	// User Interface
 	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Purple, "GameMode Gameover");
-	GEngine->AddOnScreenDebugMessage(-1, 6, FColor::Purple, FString("Essence: ") + FString::FromInt(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence));
 
 	// Save Game
 	UPlayerDataSave* Save = Cast<UPlayerDataSave>(UGameplayStatics::CreateSaveGameObject(UPlayerDataSave::StaticClass()));
