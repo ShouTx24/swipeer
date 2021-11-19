@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "TrunkMainPart.h"
 #include "TrunkWall.generated.h"
 
 /**

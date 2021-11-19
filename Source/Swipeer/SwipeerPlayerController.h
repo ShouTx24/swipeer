@@ -5,8 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Trunk/Trunk.h"
+
 #include "Blueprint/UserWidget.h"
 #include "UI/RunTimeUI.h"
+#include "UI/GameOverUI.h"
+#include "UI/MainMenuUI.h"
+
 #include "SwipeerPlayerController.generated.h"
 
 /**
@@ -36,9 +40,25 @@ class SWIPEER_API ASwipeerPlayerController : public APlayerController
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UUserWidget> RunTimeUIClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> GameOverUIClass;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> MainMenuUIClass;
 public:
 	
 	UPROPERTY(EditDefaultsOnly)
 	URunTimeUI* RunTimeUI;
 
+	UPROPERTY(EditDefaultsOnly)
+	UGameOverUI* GameOverUI;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMainMenuUI* MainMenuUI;
+
+	UFUNCTION()
+	void GameStarted();
+	
+	UFUNCTION()
+	void GameOver(int Score, int Record, bool bNewRecord = false);
 };

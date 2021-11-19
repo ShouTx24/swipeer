@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
-#include "Kismet/GameplayStatics.h"
-#include "../Managment/SwipeerGameState.h"
 #include "RunTimeUI.generated.h"
 
 /**
@@ -28,6 +26,6 @@ protected:
 	class UTextBlock* Essence;
 public:
 	void UpdateScore(int newScore);
-	void SetRecord(int newRecord);
+	void UpdateRecord(int newRecord);
 	void UpdateEssence(int newEssence);
 };

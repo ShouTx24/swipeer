@@ -2,14 +2,14 @@
 
 #include "BallPawn.h"
 #include "Camera/CameraComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Managment/SwipeerGameState.h"
 #include "Components/StaticMeshComponent.h"
+#include "Managment/SwipeerGameState.h"
+
 
 ABallPawn::ABallPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	UStaticMeshComponent* Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	ConstructorHelpers::FObjectFinder<UStaticMesh> NewPartMesh(TEXT("/Game/Trunk/TrunkMeshes/Part"));
 	Mesh->SetStaticMesh(NewPartMesh.Object);
@@ -24,6 +24,7 @@ ABallPawn::ABallPawn()
 void ABallPawn::BeginPlay()
 {
 	Super::BeginPlay();
+	SetActorTickEnabled(false);
 }
 
 void ABallPawn::Tick(float DeltaTime)

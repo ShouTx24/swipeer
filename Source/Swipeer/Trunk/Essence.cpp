@@ -2,7 +2,6 @@
 
 
 #include "Essence.h"
-#include "Kismet/GameplayStatics.h"
 #include "../Managment/SwipeerGameState.h"
 
 UEssence::UEssence()

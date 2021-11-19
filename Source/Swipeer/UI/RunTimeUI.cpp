@@ -7,7 +7,7 @@ void URunTimeUI::UpdateScore(int newScore)
 	Score->SetText(FText::AsNumber(newScore));
 }
 
-void URunTimeUI::SetRecord(int newRecord)
+void URunTimeUI::UpdateRecord(int newRecord)
 {
 	Record->SetText(FText::AsNumber(newRecord));
 }

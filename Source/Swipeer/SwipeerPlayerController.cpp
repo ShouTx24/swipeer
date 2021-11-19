@@ -3,22 +3,43 @@
 #include "SwipeerPlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Managment/SwipeerGameState.h"
 #include "Managment/SwipeerGameInstance.h"
 
 ASwipeerPlayerController::ASwipeerPlayerController()
 {
 	ConstructorHelpers::FClassFinder<UUserWidget> RunTimeUIClassBP(TEXT("/Game/UI/RunTimeUI"));
 	RunTimeUIClass = RunTimeUIClassBP.Class;
+
+	ConstructorHelpers::FClassFinder<UUserWidget> GameOverUIClassBP(TEXT("/Game/UI/GameOverUI"));
+	GameOverUIClass = GameOverUIClassBP.Class;
+
+	ConstructorHelpers::FClassFinder<UUserWidget> MainMenuUIClassBP(TEXT("/Game/UI/Menu/MainMenuUI"));
+	MainMenuUIClass = MainMenuUIClassBP.Class;
 }
 
 void ASwipeerPlayerController::BeginPlay()
 {
 	Trunk = Cast<ATrunk>(UGameplayStatics::GetActorOfClass(GetWorld(), ATrunk::StaticClass()));
+	
+	if (!MainMenuUIClass) return;
+	MainMenuUI = Cast<UMainMenuUI>(CreateWidget<UUserWidget>(this, MainMenuUIClass));
+	MainMenuUI->AddToViewport();
+
 	if (!RunTimeUIClass) return;
 	RunTimeUI = Cast<URunTimeUI>(CreateWidget<UUserWidget>(this, RunTimeUIClass));
-	RunTimeUI->AddToViewport();
-	RunTimeUI->SetRecord(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord);
+
+	if (!GameOverUIClass) return;
+	GameOverUI = Cast<UGameOverUI>(CreateWidget<UUserWidget>(this, GameOverUIClass));
+}
+
+void ASwipeerPlayerController::GameStarted()
+{
+	MainMenuUI->RemoveFromParent();
+	RunTimeUI->UpdateRecord(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord);
 	RunTimeUI->UpdateEssence(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence);
+	RunTimeUI->AddToViewport();
+	Cast<ASwipeerGameState>(GWorld->GetGameState())->StartGame();
 }
 
 void ASwipeerPlayerController::SetupInputComponent()
@@ -53,4 +74,13 @@ void ASwipeerPlayerController::GetSwipeDirection()
 	{
 		Trunk->Turn(1);
 	}
+}
+
+void ASwipeerPlayerController::GameOver(int Score, int Record, bool bNewRecord)
+{
+	if(RunTimeUI->IsInViewport()) RunTimeUI->RemoveFromParent();
+	
+	GameOverUI->AddToViewport();
+	GameOverUI->UpdatePoints(Score);
+	GameOverUI->UpdateRecord(Record);
 }

@@ -2,9 +2,7 @@
 
 
 #include "SwipeerGameState.h"
-#include "Kismet/GameplayStatics.h"
-#include "SwipeerGameInstance.h"
-#include "../SwipeerPlayerController.h"
+
 
 ASwipeerGameState::ASwipeerGameState()
 {
@@ -18,6 +16,7 @@ void ASwipeerGameState::BeginPlay()
 	Pawn = UGameplayStatics::GetPlayerPawn(GWorld, 0);
 	Trunk = Cast<ATrunk>(UGameplayStatics::GetActorOfClass(GWorld, ATrunk::StaticClass()));
 	GameMode = Cast<ASwipeerGameModeBase>(UGameplayStatics::GetGameMode(GWorld));
+	PlayerController = Cast<ASwipeerPlayerController>(GWorld->GetFirstPlayerController());
 
 }
 void ASwipeerGameState::Tick(float DeltaTime)
@@ -26,8 +25,13 @@ void ASwipeerGameState::Tick(float DeltaTime)
 	if (GameMode->BBallReachNextElement(Pawn, Trunk))
 	{
 		Score++;
-		Cast<ASwipeerPlayerController>(GWorld->GetFirstPlayerController())->RunTimeUI->UpdateScore(GetScore());
+		PlayerController->RunTimeUI->UpdateScore(GetScore());
 	}
+}
+
+void ASwipeerGameState::StartGame()
+{
+	GameMode->StartGame();
 }
 
 void ASwipeerGameState::GameOver(APawn* Player)
@@ -49,5 +53,5 @@ int ASwipeerGameState::GetEssence()
 void ASwipeerGameState::GiveEssence()
 {
 	Essence++;
-	Cast<ASwipeerPlayerController>(GWorld->GetFirstPlayerController())->RunTimeUI->UpdateEssence(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence+Essence);
+	PlayerController->RunTimeUI->UpdateEssence(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence + GetEssence());
 }

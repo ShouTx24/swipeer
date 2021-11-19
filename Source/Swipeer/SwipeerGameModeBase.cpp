@@ -2,11 +2,6 @@
 
 
 #include "SwipeerGameModeBase.h"
-#include "BallPawn.h"
-#include "SwipeerPlayerController.h"
-#include "Managment/SwipeerGameInstance.h"
-#include "Kismet/GameplayStatics.h"
-#include "Managment/PlayerDataSave.h"
 #include "Managment/SwipeerGameState.h"
 
 ASwipeerGameModeBase::ASwipeerGameModeBase(const FObjectInitializer& ObjectInitializer)
@@ -25,7 +20,11 @@ bool ASwipeerGameModeBase::BBallReachNextElement(APawn* Ball, ATrunk* Trunk)
 		else return false;
 	}
 	else return false;
+}
 
+void ASwipeerGameModeBase::StartGame()
+{
+	UGameplayStatics::GetPlayerPawn(GWorld, 0)->SetActorTickEnabled(true);
 }
 
 void ASwipeerGameModeBase::GameOver(APawn* Player)
@@ -38,14 +37,14 @@ void ASwipeerGameModeBase::GameOver(APawn* Player)
 	int currentScore = GetGameState<ASwipeerGameState>()->GetScore();
 	if (currentScore > currentRecord)
 	{
-		GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord = currentScore;
+		currentRecord = GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord = currentScore;
 	}
 
 	// Adding new Essence to general account
 	GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence += GetGameState<ASwipeerGameState>()->GetEssence();
 
 	// User Interface
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Purple, "GameMode Gameover");
+	Cast<ASwipeerPlayerController>(Player->GetController())->GameOver(currentScore, currentRecord);
 
 	// Save Game
 	UPlayerDataSave* Save = Cast<UPlayerDataSave>(UGameplayStatics::CreateSaveGameObject(UPlayerDataSave::StaticClass()));
