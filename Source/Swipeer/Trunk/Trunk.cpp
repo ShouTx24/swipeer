@@ -33,11 +33,11 @@ void ATrunk::BeginPlay()
 void ATrunk::NewPart()
 {
 	UTrunkMainPart* NewPart = NewObject<UTrunkMainPart>(this);
-	NewPart->SetRelativeLocation(FVector(0, PartCounter * 500, 0));
+	NewPart->SetRelativeLocation(FVector(0, TrunkParts.Top()->GetRelativeLocation().Y + (TrunkMainPartModel->GetBounds().BoxExtent.Y * 2), 0));
 	NewPart->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	NewPart->RegisterComponent();
+	NewPart->SetMaterial(0, Materials[0]);
 	TrunkParts.Add(NewPart);
-	if (PartCounter %2 != 0) NewPart->SetMaterial(0, Materials[0]);
 	PartCounter++;
 }
 
