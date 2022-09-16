@@ -11,9 +11,8 @@ ABallPawn::ABallPawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	UStaticMeshComponent* Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	ConstructorHelpers::FObjectFinder<UStaticMesh> NewPartMesh(TEXT("/Game/Trunk/TrunkMeshes/Part"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh> NewPartMesh(TEXT("/Game/Sphere"));
 	Mesh->SetStaticMesh(NewPartMesh.Object);
-	Mesh->SetWorldScale3D(FVector(0.7, 0.2, 0.7));
 	RootComponent = Mesh;
 
 	UCameraComponent* MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
