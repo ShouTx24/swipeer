@@ -9,38 +9,55 @@ ATrunk::ATrunk()
 	
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	
+	// Create first core segment of the Trunk
 	UTrunkMainPart* NewPart = CreateDefaultSubobject<UTrunkMainPart>(TEXT("DefaultPartComponent"));
 	NewPart->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepRelativeTransform);
 	NewPart->RegisterComponent();
 	
+	// Default values
+	PartCounter = 1;
+	turnValue = 0;
+	turnProgress = 0;
+	bIsMoving = false;
+	turnSpeed = 1.f;
+
+	// Add core part to an array
+	TrunkParts.Add(NewPart);
+
 	ConstructorHelpers::FObjectFinder<UStaticMesh> NewPartMesh(TEXT("/Game/Trunk/TrunkMeshes/Part"));
 	if (!NewPartMesh.Succeeded()) return;
 	
 	TrunkMainPartModel = NewPartMesh.Object;
 	NewPart->SetStaticMesh(NewPartMesh.Object);
-	TrunkParts.Add(NewPart);
 }
+
+
 
 void ATrunk::BeginPlay()
 {
 	Super::BeginPlay();
+	// Check if meshes are set
 	if (!TrunkMainPartModel || !TrunkWallModel) return;
 	
+	//???
 	turnSpeed *= 60;
 	while(PartCounter < 30) NewPart();
 }
 
+//Add new segment to the Trunk and register progress
 void ATrunk::NewPart()
 {
 	UTrunkMainPart* NewPart = NewObject<UTrunkMainPart>(this);
 	NewPart->SetRelativeLocation(FVector(0, TrunkParts.Top()->GetRelativeLocation().Y + (TrunkMainPartModel->GetBounds().BoxExtent.Y * 2), 0));
 	NewPart->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	NewPart->RegisterComponent();
+	// TODO: Change material array to some more complex structure
 	NewPart->SetMaterial(0, Materials[0]);
 	TrunkParts.Add(NewPart);
 	PartCounter++;
 }
 
+// Removes parts form the Trunk
 void ATrunk::RemovePart()
 {
 	TArray<USceneComponent*> ChildrenComponents;
@@ -58,6 +75,8 @@ void ATrunk::RemovePart()
 void ATrunk::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Turning a trunk / TODO: make indepented from FPS
 	if (turnProgress >= turnSpeed) bIsMoving = false;
 	if (bIsMoving)
 	{
@@ -66,6 +85,7 @@ void ATrunk::Tick(float DeltaTime)
 	}
 }
 
+// Get Static Mesh of core segment (0) or wall (1) 
 UStaticMesh* ATrunk::GetStaticMesh(int type)
 {
 	if (!TrunkMainPartModel || !TrunkWallModel) return nullptr;

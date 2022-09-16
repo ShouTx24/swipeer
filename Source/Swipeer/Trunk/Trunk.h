@@ -40,21 +40,23 @@ public:
 	UPROPERTY(EditAnywhere)
 	UStaticMesh* TrunkWallModel;
 
-	UPROPERTY(VisibleAnywhere)
-	int PartCounter = 1;
+	UPROPERTY()
+	int PartCounter;
 
+	UFUNCTION()
 	UStaticMesh* GetStaticMesh(int id);
 	
+	UFUNCTION()
 	void Turn(int Direction);
 
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterial*>Materials;
 	
-	bool bIsMoving{ false };
-	float turnValue{ 0 };
-	float turnProgress{ 0 };
+	bool bIsMoving;
+	float turnValue;
+	float turnProgress;
 
 	UPROPERTY(EditAnywhere)
-	float turnSpeed{ 1.f };
+	float turnSpeed;
 
 };
