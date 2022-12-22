@@ -5,30 +5,27 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "SwipeerGameInstance.h"
-#include "Kismet/GameplayStatics.h"
+
 #include "PlayerDataSave.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class SWIPEER_API UPlayerDataSave : public USaveGame
 {
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	FName playerName;
+	FName PlayerName;
 
 	UPROPERTY()
-	int playerRecord;
+	int PlayerRecord;
 
 	UPROPERTY()
-	int playerEssence;
+	int PlayerEssence;
 
 	UPROPERTY()
-	bool premiumUser;
+	bool PremiumUser;
 
 public:
-	void SaveData(FPlayerData* NewPlayerData);
-	void LoadData(FPlayerData* OutPlayerData);
+	void SaveData(const FPlayerData& NewPlayerData);
+	void LoadData(FPlayerData& OutPlayerData) const;
 };

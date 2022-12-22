@@ -1,20 +1,22 @@
 // Property of Kamil Bochenski. All rights reserved.
 
 #include "MainMenuUI.h"
-#include "../SwipeerPlayerController.h"
+#include "../SwipeerGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 void UMainMenuUI::NativeConstruct()
 {
-	Super::NativeConstruct();
 	PlayButton->OnClicked.AddDynamic(this, &UMainMenuUI::PlayButtonClicked);
 	ShopButton->OnClicked.AddDynamic(this, &UMainMenuUI::ShopButtonClicked);
 	SettingsButton->OnClicked.AddDynamic(this, &UMainMenuUI::SettingsButtonClicked);
 	WardrobeButton->OnClicked.AddDynamic(this, &UMainMenuUI::WardrobeButtonClicked);
+
+	Super::NativeConstruct();
 }
 
 void UMainMenuUI::PlayButtonClicked()
 {
-	Cast<ASwipeerPlayerController>(GetOwningPlayer())->GameStarted();
+	Cast<ASwipeerGameModeBase>(UGameplayStatics::GetGameMode(GWorld))->StartGame();
 }
 
 void UMainMenuUI::ShopButtonClicked()

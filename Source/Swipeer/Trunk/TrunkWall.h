@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class SWIPEER_API UTrunkWall : public UInstancedStaticMeshComponent
+class SWIPEER_API UTrunkWall : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 	

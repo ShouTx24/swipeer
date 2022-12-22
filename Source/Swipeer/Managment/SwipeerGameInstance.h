@@ -7,39 +7,22 @@
 #include "Kismet/GameplayStatics.h"
 #include "SwipeerGameInstance.generated.h"
 
-/**
- * 
- */
 USTRUCT(BlueprintType)
 struct FPlayerData
 {
 	GENERATED_BODY(BlueprintType)
 
 	UPROPERTY(BlueprintReadOnly)
-	FName playerName;
+	FName PlayerName;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int playerRecord;
+	int PlayerRecord;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int playerEssence;
+	int PlayerEssence;
 	
 	UPROPERTY(BlueprintReadWrite)
-	bool premiumUser;
-
-	FPlayerData()
-	{
-		playerName = FName("Player");
-		playerRecord = 0;
-		playerEssence = 0;
-		premiumUser = false;
-	}
-
-	//UPROPERTY()
-	//X selectedSkin;
-	//
-	//UPROPERTY()
-	//Y unlockedSkins;
+	bool PremiumUser;
 };
 
 UCLASS()
@@ -49,7 +32,7 @@ class SWIPEER_API USwipeerGameInstance : public UGameInstance
 public:
 	
 	UPROPERTY(BlueprintReadWrite)
-	FPlayerData PlayerData = FPlayerData();
+	FPlayerData PlayerData;
 
 	virtual void Init();
 };

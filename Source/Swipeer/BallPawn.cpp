@@ -17,7 +17,7 @@ ABallPawn::ABallPawn()
 
 	UCameraComponent* MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetRelativeLocationAndRotation(FVector(-500, 0, 150), FQuat(FRotator(-10, 0, 0)));
-	MainCamera->SetupAttachment(RootComponent);
+	MainCamera->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 void ABallPawn::BeginPlay()
@@ -34,10 +34,10 @@ void ABallPawn::Tick(float DeltaTime)
 
 void ABallPawn::MoveForward(float DeltaTime)
 {
-	SetActorLocation(GetActorLocation() + FVector(0, 1500 * DeltaTime, 0), true);
+	SetActorLocation(GetActorLocation() + GetActorForwardVector() * DeltaTime * Speed, true);
 }
 
 void ABallPawn::NotifyHit(class UPrimitiveComponent* MyComp,AActor* Other,class UPrimitiveComponent* OtherComp,bool bSelfMoved,FVector HitLocation,FVector HitNormal,FVector NormalImpulse,const FHitResult& Hit)
 {
-	Cast<ASwipeerGameState>(UGameplayStatics::GetGameState(GWorld))->GameOver(Cast<APawn>(MyComp->GetOwner()));
+	Cast<ASwipeerGameModeBase>(UGameplayStatics::GetGameMode(GWorld))->GameOver(this);
 }

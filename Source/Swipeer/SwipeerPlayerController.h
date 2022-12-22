@@ -1,64 +1,46 @@
 // Property of Kamil Bochenski. All right's reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Trunk/Trunk.h"
-
-#include "Blueprint/UserWidget.h"
-#include "UI/RunTimeUI.h"
-#include "UI/GameOverUI.h"
-#include "UI/MainMenuUI.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "SwipeerPlayerController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class SWIPEER_API ASwipeerPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+public:
 
-	ASwipeerPlayerController();
-
-	virtual void BeginPlay() override;
-		
+	virtual void BeginPlay() override;	
 	virtual void SetupInputComponent() override;
-
 	virtual void Tick(float DeltaTime) override;
 
 	void TouchStart(ETouchIndex::Type FingerIndex, FVector Location);
 
-	FVector TouchStartLocation;
-
-	ATrunk* Trunk;
-
-	void GetSwipeDirection();
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> MainMenuUIClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UUserWidget> RunTimeUIClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UUserWidget> GameOverUIClass;
-	
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class UUserWidget> MainMenuUIClass;
-public:
-	
-	UPROPERTY(EditDefaultsOnly)
-	URunTimeUI* RunTimeUI;
 
-	UPROPERTY(EditDefaultsOnly)
-	UGameOverUI* GameOverUI;
+	class URunTimeUI* RunTimeUI;
+	class UGameOverUI* GameOverUI;
+	class UMainMenuUI* MainMenuUI;
 
-	UPROPERTY(EditDefaultsOnly)
-	UMainMenuUI* MainMenuUI;
-
-	UFUNCTION()
-	void GameStarted();
+	void UpdateRuntimeUIData(float Points, float Essence = NULL, float Record = NULL);
+	void ReplaceUI(UUserWidget* Show, UUserWidget* Hide = nullptr);
+	void ShowStartGameUI();
+	void ShowGameOverUI(float Score, float Record);
 	
-	UFUNCTION()
-	void GameOver(int Score, int Record, bool bNewRecord = false);
+	FVector TouchStartLocation;
+	ATrunk* Trunk;
+
+	void GetSwipeDirection();
+
 };

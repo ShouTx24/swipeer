@@ -15,17 +15,8 @@ class SWIPEER_API ATrunk : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ATrunk();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	TArray<UTrunkMainPart*>TrunkParts;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(CallInEditor)
@@ -33,6 +24,15 @@ public:
 
 	UFUNCTION(CallInEditor)
 	void RemovePart();
+
+	UStaticMeshComponent* GetLastPart();
+	UStaticMeshComponent* GetTopPart();
+
+	UFUNCTION()
+	UStaticMesh* GetStaticMesh(int id);
+	
+	UFUNCTION()
+	void Turn(int Direction);
 
 	UPROPERTY(EditAnywhere)
 	UStaticMesh* TrunkMainPartModel;
@@ -43,12 +43,6 @@ public:
 	UPROPERTY()
 	int PartCounter;
 
-	UFUNCTION()
-	UStaticMesh* GetStaticMesh(int id);
-	
-	UFUNCTION()
-	void Turn(int Direction);
-
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterial*>Materials;
 	
@@ -58,5 +52,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float turnSpeed;
+
+protected:
+	virtual void BeginPlay() override;
+
+	TArray<UTrunkMainPart*>TrunkParts;
 
 };

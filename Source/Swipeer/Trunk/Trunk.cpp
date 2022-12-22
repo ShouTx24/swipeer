@@ -25,23 +25,30 @@ ATrunk::ATrunk()
 	TrunkParts.Add(NewPart);
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> NewPartMesh(TEXT("/Game/Trunk/TrunkMeshes/Part"));
-	if (!NewPartMesh.Succeeded()) return;
+	if (!NewPartMesh.Succeeded())
+	{
+		return;
+	}
 	
 	TrunkMainPartModel = NewPartMesh.Object;
 	NewPart->SetStaticMesh(NewPartMesh.Object);
 }
 
-
-
 void ATrunk::BeginPlay()
 {
 	Super::BeginPlay();
 	// Check if meshes are set
-	if (!TrunkMainPartModel || !TrunkWallModel) return;
+	if (!TrunkMainPartModel || !TrunkWallModel)
+	{
+		return;
+	}
 	
 	//???
 	turnSpeed *= 60;
-	while(PartCounter < 30) NewPart();
+	while (PartCounter < 30)
+	{
+		NewPart();
+	}
 }
 
 //Add new segment to the Trunk and register progress
@@ -57,7 +64,6 @@ void ATrunk::NewPart()
 	PartCounter++;
 }
 
-// Removes parts form the Trunk
 void ATrunk::RemovePart()
 {
 	TArray<USceneComponent*> ChildrenComponents;
@@ -70,6 +76,24 @@ void ATrunk::RemovePart()
 	TrunkParts[0]->DestroyComponent(false);
 	TrunkParts.RemoveAt(0); 
 	NewPart();
+}
+
+UStaticMeshComponent* ATrunk::GetLastPart()
+{
+	if (TrunkParts.Num() > 0)
+	{
+		return nullptr;
+	}
+	return TrunkParts[0];
+}
+
+UStaticMeshComponent* ATrunk::GetTopPart()
+{
+	if (TrunkParts.Num() > 0)
+	{
+		return nullptr;
+	}
+	return TrunkParts[TrunkParts.Num()-1];;
 }
 
 void ATrunk::Tick(float DeltaTime)
@@ -88,14 +112,26 @@ void ATrunk::Tick(float DeltaTime)
 // Get Static Mesh of core segment (0) or wall (1) 
 UStaticMesh* ATrunk::GetStaticMesh(int type)
 {
-	if (!TrunkMainPartModel || !TrunkWallModel) return nullptr;
-	if (type == 1) return TrunkMainPartModel;
-	else return TrunkWallModel;
+	if (!TrunkMainPartModel || !TrunkWallModel)
+	{
+		return nullptr;
+	}
+	if (type == 1)
+	{
+		return TrunkMainPartModel;
+	}
+	else
+	{
+		return TrunkWallModel;
+	}
 }
 
 void ATrunk::Turn(int Direction)
 {
-	if (bIsMoving) return;
+	if (bIsMoving)
+	{
+		return;
+	}
 	bIsMoving = true;
 	turnValue = 45 / turnSpeed * Direction;
 	turnProgress = 0;

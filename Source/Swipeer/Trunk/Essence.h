@@ -5,12 +5,10 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "../SwipeerGameModeBase.h"
 #include "Essence.generated.h"
 
-/**
- * 
- */
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = "Points", meta = (BlueprintSpawnableComponent))
 class SWIPEER_API UEssence : public UBoxComponent
 {
 	GENERATED_BODY()

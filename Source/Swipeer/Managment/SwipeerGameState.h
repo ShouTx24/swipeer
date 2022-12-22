@@ -15,30 +15,4 @@ class SWIPEER_API ASwipeerGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 
-	ASwipeerGameState();
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	APawn* Pawn;
-	ATrunk* Trunk;
-	ASwipeerGameModeBase* GameMode;
-	ASwipeerPlayerController* PlayerController;
-	int Score{ 0 };
-	int Essence{ 0 };
-
-public:
-	
-	UFUNCTION()
-	void StartGame();
-	
-	UFUNCTION()
-	void GameOver(APawn* PlayerPawn);
-	
-	UFUNCTION()
-	int GetScore();
-
-	UFUNCTION()
-	int GetEssence();
-
-	UFUNCTION()
-	void GiveEssence();
 };

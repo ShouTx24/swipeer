@@ -1,20 +1,19 @@
 // Property of Kamil Bochenski. All rights reserved.
 
-
 #include "PlayerDataSave.h"
 
-void UPlayerDataSave::SaveData(FPlayerData* NewPlayerData)
+void UPlayerDataSave::SaveData(const FPlayerData& NewPlayerData)
 {
-	playerName = NewPlayerData->playerName;
-	playerEssence = NewPlayerData->playerEssence;
-	playerRecord = NewPlayerData->playerRecord;
-	premiumUser = NewPlayerData->premiumUser;
+	PlayerName = NewPlayerData.PlayerName;
+	PlayerEssence = NewPlayerData.PlayerEssence;
+	PlayerRecord = NewPlayerData.PlayerRecord;
+	PremiumUser = NewPlayerData.PremiumUser;
 }
 
-void UPlayerDataSave::LoadData(FPlayerData* OutPlayerData)
+void UPlayerDataSave::LoadData(FPlayerData& OutPlayerData) const
 {
-	OutPlayerData->playerName = playerName;
-	OutPlayerData->playerEssence = playerEssence;
-	OutPlayerData->playerRecord = playerRecord;
-	OutPlayerData->premiumUser = premiumUser;
+	OutPlayerData.PlayerName = PlayerName;
+	OutPlayerData.PlayerEssence = PlayerEssence;
+	OutPlayerData.PlayerRecord = PlayerRecord;
+	OutPlayerData.PremiumUser = PremiumUser;
 }

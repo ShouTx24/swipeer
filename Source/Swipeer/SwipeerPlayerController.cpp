@@ -1,45 +1,32 @@
 // Property of Kamil Bochenski. All right's reserved.
 
 #include "SwipeerPlayerController.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Kismet/GameplayStatics.h"
-#include "Managment/SwipeerGameState.h"
-#include "Managment/SwipeerGameInstance.h"
-
-ASwipeerPlayerController::ASwipeerPlayerController()
-{
-	ConstructorHelpers::FClassFinder<UUserWidget> RunTimeUIClassBP(TEXT("/Game/UI/RunTimeUI"));
-	RunTimeUIClass = RunTimeUIClassBP.Class;
-
-	ConstructorHelpers::FClassFinder<UUserWidget> GameOverUIClassBP(TEXT("/Game/UI/GameOverUI"));
-	GameOverUIClass = GameOverUIClassBP.Class;
-
-	ConstructorHelpers::FClassFinder<UUserWidget> MainMenuUIClassBP(TEXT("/Game/UI/Menu/MainMenuUI"));
-	MainMenuUIClass = MainMenuUIClassBP.Class;
-}
+#include "UI/GameOverUI.h"
+#include "UI/MainMenuUI.h"
+#include "UI/RuntimeUI.h"
 
 void ASwipeerPlayerController::BeginPlay()
 {
 	Trunk = Cast<ATrunk>(UGameplayStatics::GetActorOfClass(GetWorld(), ATrunk::StaticClass()));
 	
-	if (!MainMenuUIClass) return;
-	MainMenuUI = Cast<UMainMenuUI>(CreateWidget<UUserWidget>(this, MainMenuUIClass));
+	if (!MainMenuUIClass)
+	{
+		return;
+	}
+	MainMenuUI = CreateWidget<UMainMenuUI>(this, MainMenuUIClass);
 	MainMenuUI->AddToViewport();
 
-	if (!RunTimeUIClass) return;
-	RunTimeUI = Cast<URunTimeUI>(CreateWidget<UUserWidget>(this, RunTimeUIClass));
+	if (!RunTimeUIClass)
+	{
+		return;
+	}
+	RunTimeUI = CreateWidget<URunTimeUI>(this, RunTimeUIClass);
 
-	if (!GameOverUIClass) return;
-	GameOverUI = Cast<UGameOverUI>(CreateWidget<UUserWidget>(this, GameOverUIClass));
-}
-
-void ASwipeerPlayerController::GameStarted()
-{
-	MainMenuUI->RemoveFromParent();
-	RunTimeUI->UpdateRecord(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerRecord);
-	RunTimeUI->UpdateEssence(GetGameInstance<USwipeerGameInstance>()->PlayerData.playerEssence);
-	RunTimeUI->AddToViewport();
-	Cast<ASwipeerGameState>(GWorld->GetGameState())->StartGame();
+	if (!GameOverUIClass)
+	{
+		return;
+	}
+	GameOverUI = CreateWidget<UGameOverUI>(this, GameOverUIClass);
 }
 
 void ASwipeerPlayerController::SetupInputComponent()
@@ -59,6 +46,52 @@ void ASwipeerPlayerController::TouchStart(ETouchIndex::Type FingerIndex, FVector
 	TouchStartLocation = Location;
 }
 
+void ASwipeerPlayerController::UpdateRuntimeUIData(float Points, float Essence, float Record)
+{
+	RunTimeUI->UpdateScore(Points);
+	
+	if (Essence != NULL)
+	{
+		RunTimeUI->UpdateEssence(Essence);
+	}
+
+	if (Record != NULL)
+	{
+		RunTimeUI->UpdateRecord(Record);
+	}
+}
+
+void ASwipeerPlayerController::ReplaceUI(UUserWidget* Show, UUserWidget* Hide)
+{
+	if (Hide)
+	{
+		if (Hide->IsInViewport())
+		{
+			Hide->RemoveFromViewport();
+		}
+	}
+	if (Show)
+	{
+		if (Show->IsInViewport())
+		{
+			return;
+		}
+		Show->AddToViewport();
+	}
+}
+
+void ASwipeerPlayerController::ShowStartGameUI()
+{
+	ReplaceUI(RunTimeUI, MainMenuUI);
+}
+
+void ASwipeerPlayerController::ShowGameOverUI(float Score, float Record)
+{
+	ReplaceUI(GameOverUI, RunTimeUI);
+	GameOverUI->UpdatePoints(Score);
+	GameOverUI->UpdateRecord(Record);
+}
+
 void ASwipeerPlayerController::GetSwipeDirection()
 {
 	FVector CurrentLocation;
@@ -76,11 +109,3 @@ void ASwipeerPlayerController::GetSwipeDirection()
 	}
 }
 
-void ASwipeerPlayerController::GameOver(int Score, int Record, bool bNewRecord)
-{
-	if(RunTimeUI->IsInViewport()) RunTimeUI->RemoveFromParent();
-	
-	GameOverUI->AddToViewport();
-	GameOverUI->UpdatePoints(Score);
-	GameOverUI->UpdateRecord(Record);
-}

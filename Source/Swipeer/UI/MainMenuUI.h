@@ -5,11 +5,9 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+
 #include "MainMenuUI.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class SWIPEER_API UMainMenuUI : public UUserWidget
 {

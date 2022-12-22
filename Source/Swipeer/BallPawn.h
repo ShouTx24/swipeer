@@ -13,6 +13,10 @@ class SWIPEER_API ABallPawn : public APawn
 
 public:
 	ABallPawn();
+	
+	UPROPERTY(EditAnywhere)
+	double Speed;
+
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void MoveForward(float DeltaTime);
