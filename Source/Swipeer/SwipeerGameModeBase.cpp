@@ -1,13 +1,20 @@
 // Property of Kamil Bochenski. All right's reserved.
-
 #include "SwipeerGameModeBase.h"
-#include "DrawDebugHelpers.h"
+
+#include "BallPawn.h"
+#include "Managment/PlayerDataSave.h"
+#include "Managment/SwipeerGameInstance.h"
+#include "Managment/SwipeerGameState.h"
+#include "SwipeerPlayerController.h"
+#include "Trunk/Trunk.h"
+#include "Trunk/TrunkCore.h"
 
 ASwipeerGameModeBase::ASwipeerGameModeBase(const FObjectInitializer& ObjectInitializer)
 {
 	DefaultPawnClass = ABallPawn::StaticClass();
 	PlayerControllerClass = ASwipeerPlayerController::StaticClass();
 	GameStateClass = ASwipeerGameState::StaticClass();
+	
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -15,75 +22,71 @@ ASwipeerGameModeBase::ASwipeerGameModeBase(const FObjectInitializer& ObjectIniti
 void ASwipeerGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PlayerController = Cast<ASwipeerPlayerController>(UGameplayStatics::GetPlayerController(GWorld, 0));
+	
+	Trunk = Cast<ATrunk>(UGameplayStatics::GetActorOfClass(GetWorld(), ATrunk::StaticClass()));
+	PlayerController = Cast<ASwipeerPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	Pawn = Cast<ABallPawn>(PlayerController->GetPawn());
 }
 void ASwipeerGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, __func__);
-
-	if (bBallHasReachedNextElement(Pawn))
+	
+	if (Pawn && BallHasReachedNextElement(*Pawn))
 	{
 		Score++;
 		PlayerController->UpdateRuntimeUIData(Score);
+		Trunk->RemovePart();
 	}
 }
-bool ASwipeerGameModeBase::bBallHasReachedNextElement(APawn* Ball)
+bool ASwipeerGameModeBase::BallHasReachedNextElement(const APawn& Ball) const
 {
-	DrawDebugLine(GWorld, Ball->GetActorLocation(), Ball->GetActorLocation() - Trunk->GetLastPart()->GetComponentLocation(), FColor::Red, false, 15);
-
-	if ((Ball->GetActorLocation() - Trunk->GetLastPart()->GetComponentLocation()).Size() < -100)
-	{
-		Trunk->RemovePart();
-		if (Trunk->PartCounter > 34)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
+	if (!Trunk)
 	{
 		return false;
 	}
+	const float Distance = (Ball.GetActorLocation() - Trunk->GetHead()->GetComponentLocation()).Size();
+	return Distance < Trunk->GetActorScale().Y * 500 * 28;
 }
 
 void ASwipeerGameModeBase::StartGame()
 {
-	USwipeerGameInstance* SGI = GetGameInstance<USwipeerGameInstance>();
-	
+	// Fetch PlayerData from Game Instance
+	USwipeerGameInstance* SwipeerGameInstance = GetGameInstance<USwipeerGameInstance>();
+	checkf(SwipeerGameInstance, TEXT("GameInstance is null!"));
+
+	// Update UI
+	checkf(PlayerController, TEXT("PlayerController is null!"));
 	PlayerController->ShowStartGameUI();
-	PlayerController->UpdateRuntimeUIData(0, SGI->PlayerData.PlayerEssence, SGI->PlayerData.PlayerRecord);
-	UGameplayStatics::GetPlayerPawn(GWorld, 0)->SetActorTickEnabled(true);
+	PlayerController->UpdateRuntimeUIData(0, SwipeerGameInstance->PlayerData.PlayerEssence, SwipeerGameInstance->PlayerData.PlayerRecord);
+
+	// Start Moving
+	Pawn->SetActorTickEnabled(true);
 }
 
-void ASwipeerGameModeBase::GameOver(APawn* Player)
+void ASwipeerGameModeBase::GameOver()
 {
-	//Stops pawn form moving and creating additional GameOver event executions.
-	Cast<ABallPawn>(Player)->SetActorTickEnabled(false);
+	// Stops pawn form moving and creating additional GameOver event executions.
+	Pawn->SetActorTickEnabled(false);
 
 	// Check if player beats it's former record.
-	int currentRecord = GetGameInstance<USwipeerGameInstance>()->PlayerData.PlayerRecord;
-	int currentScore = Score;
-	if (currentScore > currentRecord)
+	USwipeerGameInstance* SwipeerGameInstance = GetGameInstance<USwipeerGameInstance>();
+	int CurrentRecord = SwipeerGameInstance->PlayerData.PlayerRecord;
+	const int CurrentScore = Score;
+	if (CurrentScore > CurrentRecord)
 	{
-		currentRecord = GetGameInstance<USwipeerGameInstance>()->PlayerData.PlayerRecord = currentScore;
+		CurrentRecord = SwipeerGameInstance->PlayerData.PlayerRecord = CurrentScore;
 	}
 
 	// Adding new Essence to general account
-	GetGameInstance<USwipeerGameInstance>()->PlayerData.PlayerEssence += Essence;
+	SwipeerGameInstance->PlayerData.PlayerEssence += Essence;
 
-	// User Interface
-	PlayerController->ShowGameOverUI(Score, currentRecord);
+	// Update UI
+	PlayerController->ShowGameOverUI(Score, CurrentRecord);
 
 	// Save Game
 	UPlayerDataSave* Save = Cast<UPlayerDataSave>(UGameplayStatics::CreateSaveGameObject(UPlayerDataSave::StaticClass()));
-	Save->SaveData(GetGameInstance<USwipeerGameInstance>()->PlayerData);
-	UGameplayStatics::SaveGameToSlot(Save, FString("Save"), 0);
+	Save->SaveData(SwipeerGameInstance->PlayerData);
+	UGameplayStatics::SaveGameToSlot(Save, TEXT("Save"), 0);
 }
 
 void ASwipeerGameModeBase::GiveEssence()

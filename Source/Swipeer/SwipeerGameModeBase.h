@@ -2,17 +2,13 @@
 
 #pragma once
 
-#include "BallPawn.h"
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Kismet/GameplayStatics.h"
-#include "Managment/PlayerDataSave.h"
-#include "Managment/SwipeerGameState.h"
-#include "Managment/SwipeerGameInstance.h"
-#include "SwipeerPlayerController.h"
-#include "Trunk/Trunk.h"
 
 #include "SwipeerGameModeBase.generated.h"
+
+class ASwipeerPlayerController;
+class ATrunk;
 
 UCLASS()
 class SWIPEER_API ASwipeerGameModeBase : public AGameModeBase
@@ -25,17 +21,22 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DelaTime) override;
 	
-	bool bBallHasReachedNextElement(APawn* Ball);
+	bool BallHasReachedNextElement(const APawn& Ball) const;
 	
 	void StartGame();
-	void GameOver(APawn* Player);
-	
+	void GameOver();
 	void GiveEssence();
-
+	
+public:
+	UPROPERTY(Transient)
 	APawn* Pawn;
+
+	UPROPERTY(Transient)
 	ATrunk* Trunk;
+
+	UPROPERTY(Transient)
 	ASwipeerPlayerController* PlayerController;
+
 	int Score = 0;
 	int Essence = 0;
-
 };

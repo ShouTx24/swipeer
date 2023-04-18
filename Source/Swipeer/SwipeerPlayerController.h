@@ -3,44 +3,59 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Trunk/Trunk.h"
-#include "Kismet/GameplayStatics.h"
 
 #include "SwipeerPlayerController.generated.h"
+
+class UUserWidget;
+class URunTimeUI;
+class UGameOverUI;
+class UMainMenuUI;
+class ATrunk;
 
 UCLASS()
 class SWIPEER_API ASwipeerPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+	
 public:
-
-	virtual void BeginPlay() override;	
+	// Standard Epic's interface
+	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaTime) override;
 
+	// Main input events
 	void TouchStart(ETouchIndex::Type FingerIndex, FVector Location);
+	void GetSwipeDirectionAndTurnTrunk();
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class UUserWidget> MainMenuUIClass;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class UUserWidget> RunTimeUIClass;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class UUserWidget> GameOverUIClass;
-
-	class URunTimeUI* RunTimeUI;
-	class UGameOverUI* GameOverUI;
-	class UMainMenuUI* MainMenuUI;
-
-	void UpdateRuntimeUIData(float Points, float Essence = NULL, float Record = NULL);
-	void ReplaceUI(UUserWidget* Show, UUserWidget* Hide = nullptr);
+	// User Interface
 	void ShowStartGameUI();
+	void UpdateRuntimeUIData(float Points, float Essence = 0, float Record = 0);
 	void ShowGameOverUI(float Score, float Record);
+	void ReplaceUI(UUserWidget* Show, UUserWidget* Hide = nullptr);
 	
+protected:
 	FVector TouchStartLocation;
+	
+	UPROPERTY(Transient)
 	ATrunk* Trunk;
 
-	void GetSwipeDirection();
+	/// User Interface
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> MainMenuUIClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> RunTimeUIClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> GameOverUIClass;
+	
+private:
+	UPROPERTY(Transient)
+	URunTimeUI* RunTimeUI;
+	
+	UPROPERTY(Transient)
+	UGameOverUI* GameOverUI;
+	
+	UPROPERTY(Transient)
+	UMainMenuUI* MainMenuUI;
 };

@@ -1,18 +1,20 @@
 // Property of Kamil Bochenski. All rights reserved.
 
-
 #include "RunTimeUI.h"
-void URunTimeUI::UpdateScore(int newScore)
+
+#include "Components/TextBlock.h"
+
+void URunTimeUI::UpdateScore(int NewScore)
 {
-	Score->SetText(FText::AsNumber(newScore));
+	Score->SetText(FText::AsNumber(NewScore));
 }
 
-void URunTimeUI::UpdateRecord(int newRecord)
+void URunTimeUI::UpdateRecord(int NewRecord)
 {
-	Record->SetText(FText::AsNumber(newRecord));
+	Record->SetText(FText::AsNumber(NewRecord));
 }
 
-void URunTimeUI::UpdateEssence(int newEssence)
+void URunTimeUI::UpdateEssence(int NewEssence)
 {
-	Essence->SetText(FText::AsNumber(newEssence));
+	Essence->SetText(FText::AsNumber(NewEssence));
 }

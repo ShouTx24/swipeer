@@ -1,9 +1,12 @@
 // Property of Kamil Bochenski. All right's reserved.
 
 #include "SwipeerPlayerController.h"
+
+#include "Kismet/GameplayStatics.h"
 #include "UI/GameOverUI.h"
 #include "UI/MainMenuUI.h"
 #include "UI/RuntimeUI.h"
+#include "Trunk/Trunk.h"
 
 void ASwipeerPlayerController::BeginPlay()
 {
@@ -38,7 +41,7 @@ void ASwipeerPlayerController::SetupInputComponent()
 void ASwipeerPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	GetSwipeDirection();
+	GetSwipeDirectionAndTurnTrunk();
 }
 
 void ASwipeerPlayerController::TouchStart(ETouchIndex::Type FingerIndex, FVector Location)
@@ -46,16 +49,37 @@ void ASwipeerPlayerController::TouchStart(ETouchIndex::Type FingerIndex, FVector
 	TouchStartLocation = Location;
 }
 
-void ASwipeerPlayerController::UpdateRuntimeUIData(float Points, float Essence, float Record)
+void ASwipeerPlayerController::GetSwipeDirectionAndTurnTrunk()
+{
+	FVector2D CurrentLocation;
+	bool bTouchActive;
+	GetInputTouchState(ETouchIndex::Touch1, CurrentLocation.X, CurrentLocation.Y, bTouchActive);
+
+	if (!bTouchActive)
+	{
+		return;
+	}
+
+	if (TouchStartLocation.X - 40 >= CurrentLocation.X)
+	{
+		// Turn right
+		Trunk->Turn(-1);
+	}
+	else if (TouchStartLocation.X + 40 <= CurrentLocation.X)
+	{
+		// Turn left
+		Trunk->Turn(1);
+	}
+}
+
+void ASwipeerPlayerController::UpdateRuntimeUIData(float Points, float Essence /*= 0*/, float Record /*= 0*/)
 {
 	RunTimeUI->UpdateScore(Points);
-	
-	if (Essence != NULL)
+	if (Essence != 0)
 	{
 		RunTimeUI->UpdateEssence(Essence);
 	}
-
-	if (Record != NULL)
+	if (Record != 0)
 	{
 		RunTimeUI->UpdateRecord(Record);
 	}
@@ -63,19 +87,12 @@ void ASwipeerPlayerController::UpdateRuntimeUIData(float Points, float Essence, 
 
 void ASwipeerPlayerController::ReplaceUI(UUserWidget* Show, UUserWidget* Hide)
 {
-	if (Hide)
+	if (Hide && Hide->IsInViewport())
 	{
-		if (Hide->IsInViewport())
-		{
-			Hide->RemoveFromViewport();
-		}
+		Hide->RemoveFromViewport();
 	}
-	if (Show)
+	if (Show && !Show->IsInViewport())
 	{
-		if (Show->IsInViewport())
-		{
-			return;
-		}
 		Show->AddToViewport();
 	}
 }
@@ -87,25 +104,8 @@ void ASwipeerPlayerController::ShowStartGameUI()
 
 void ASwipeerPlayerController::ShowGameOverUI(float Score, float Record)
 {
-	ReplaceUI(GameOverUI, RunTimeUI);
 	GameOverUI->UpdatePoints(Score);
 	GameOverUI->UpdateRecord(Record);
-}
-
-void ASwipeerPlayerController::GetSwipeDirection()
-{
-	FVector CurrentLocation;
-	bool bTouchActive;
-	GetInputTouchState(ETouchIndex::Touch1, CurrentLocation.X, CurrentLocation.Y, bTouchActive);
-	if (!bTouchActive) return;
-
-	if (TouchStartLocation.X - 40 >= CurrentLocation.X)
-	{
-		Trunk->Turn(-1);
-	}
-	else if (TouchStartLocation.X + 40 <= CurrentLocation.X)
-	{
-		Trunk->Turn(1);
-	}
+	ReplaceUI(GameOverUI, RunTimeUI);
 }
 

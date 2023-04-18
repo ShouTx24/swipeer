@@ -4,10 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "UObject/ConstructorHelpers.h"
+
 #include "Trunk.generated.h"
 
-class UTrunkMainPart;
+USTRUCT(BlueprintType)
+struct SWIPEER_API FMotive
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	FName MotiveName;
+	
+	UPROPERTY(EditAnywhere)
+	UMaterialInstance* CoreMeshMaterial;
+	
+	UPROPERTY(EditAnywhere)
+	TArray<UStaticMesh*> Walls;
+};
+
+class UTrunkCore;
 
 UCLASS()
 class SWIPEER_API ATrunk : public AActor
@@ -16,46 +31,42 @@ class SWIPEER_API ATrunk : public AActor
 	
 public:	
 	ATrunk();
-
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(CallInEditor)
+	virtual void BeginPlay() override;
+	
 	void NewPart();
-
-	UFUNCTION(CallInEditor)
 	void RemovePart();
 
-	UStaticMeshComponent* GetLastPart();
-	UStaticMeshComponent* GetTopPart();
-
-	UFUNCTION()
-	UStaticMesh* GetStaticMesh(int id);
+	UTrunkCore* GetHead() const;
+	UTrunkCore* GetTail() const;
 	
-	UFUNCTION()
-	void Turn(int Direction);
-
-	UPROPERTY(EditAnywhere)
-	UStaticMesh* TrunkMainPartModel;
-
-	UPROPERTY(EditAnywhere)
-	UStaticMesh* TrunkWallModel;
-
-	UPROPERTY()
-	int PartCounter;
-
-	UPROPERTY(EditAnywhere)
-	TArray<UMaterial*>Materials;
+	UFUNCTION(BlueprintNativeEvent)
+	void Turn(const int Direction);
 	
-	bool bIsMoving;
-	float turnValue;
-	float turnProgress;
-
-	UPROPERTY(EditAnywhere)
-	float turnSpeed;
-
+	FMotive GetActiveMotive() const;
+	
 protected:
-	virtual void BeginPlay() override;
+	void ChangeToNextMotive();
+	
+public:
+	UPROPERTY(EditAnywhere);
+	TArray<FMotive> Motives;
 
-	TArray<UTrunkMainPart*>TrunkParts;
+	UPROPERTY(EditAnywhere)
+	int MotiveChangeThreshold = 50;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TurnSpeed = 1.f;
 
+	UPROPERTY(EditAnywhere)
+	UStaticMesh* TrunkCoreMesh;
+
+	UPROPERTY(EditAnywhere)
+	int TrunkLenght = 30;
+	
+	int PartCounter = 0;
+	
+private:
+	FMotive ActiveMotive;
+	uint8 ActiveMotiveID = 0;
+	TDoubleLinkedList<UTrunkCore*> TrunkParts;
 };

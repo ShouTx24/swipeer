@@ -4,17 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Trunk.h"
-#include "TrunkMainPart.generated.h"
+
+#include "TrunkCore.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class SWIPEER_API UTrunkMainPart : public UStaticMeshComponent
+class SWIPEER_API UTrunkCore : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 
 protected:
 	virtual void BeginPlay() override;
-
-		
 };

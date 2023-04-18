@@ -3,16 +3,15 @@
 
 #include "Essence.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "Swipeer/SwipeerGameModeBase.h"
+
 UEssence::UEssence()
 {
-	this->InitBoxExtent(FVector(10, 10, 10));
-	
-	this->SetCollisionProfileName(FName("OverlapAll"));
+	SetCollisionProfileName(FName("OverlapAll"));
 	
 	ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleSystem(TEXT("/Game/Trunk/Essence/EssencePoint"));
-	ParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystem"));
-	ParticleComponent->SetTemplate(ParticleSystem.Object);
-	ParticleComponent->SetupAttachment(this);
+	SetTemplate(ParticleSystem.Object);
 	
 	this->OnComponentBeginOverlap.AddDynamic(this, &UEssence::OnOverlap);
 }
@@ -20,16 +19,15 @@ UEssence::UEssence()
 void UEssence::BeginPlay()
 {
 	Super::BeginPlay();
-	ParticleComponent->RegisterComponent();
 }
 
 void UEssence::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Cast<ASwipeerGameModeBase>(UGameplayStatics::GetGameMode(GWorld))->GiveEssence();
-	TArray<USceneComponent*> Children = this->GetAttachChildren();
+	TArray<USceneComponent*> Children = GetAttachChildren();
 	for (USceneComponent* ChildComponent : Children)
 	{
 		ChildComponent->DestroyComponent();
 	}
-	this->DestroyComponent();
+	DestroyComponent();
 }
