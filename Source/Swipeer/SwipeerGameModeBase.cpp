@@ -45,7 +45,9 @@ bool ASwipeerGameModeBase::BallHasReachedNextElement(const APawn& Ball) const
 		return false;
 	}
 	const float Distance = (Ball.GetActorLocation() - Trunk->GetHead()->GetComponentLocation()).Size();
-	return Distance < Trunk->GetActorScale().Y * 500 * 28;
+	const float CoreLength = Trunk->GetActorScale().Y * Trunk->TrunkCoreMesh->GetBounds().BoxExtent.Y * 2;
+	const uint8 TrunkLenght = Trunk->TrunkLenght - 3;
+	return Distance <  CoreLength * TrunkLenght;
 }
 
 void ASwipeerGameModeBase::StartGame()
