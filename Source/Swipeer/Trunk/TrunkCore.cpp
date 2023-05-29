@@ -20,7 +20,7 @@ void UTrunkCore::BeginPlay()
 	}
 	
 	// How far we are
-	Parts = FMath::LogX(3,Parts / 10);
+	Parts = FMath::LogX(3.f,Parts / 10.f);
 	
 	// Ensure that there is at least one valid part.
 	if (Parts < 1)
