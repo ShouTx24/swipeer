@@ -36,7 +36,7 @@ void ATrunk::NewPart()
 	UTrunkCore* NewPart = NewObject<UTrunkCore>(this);
 	NewPart->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	NewPart->SetRelativeLocation(FVector(0,
-		GetHead() ? GetHead()->GetRelativeLocation().Y + TrunkCoreMesh->GetBounds().BoxExtent.Y * 2 : 0,
+		GetHead() ? GetHead()->GetRelativeLocation().Y + TrunkCoreMesh->GetBounds().BoxExtent.X * 2 : 0,
 		0));
 	NewPart->SetStaticMesh(TrunkCoreMesh);
 	NewPart->SetMaterial(0, GetActiveMotive().CoreMeshMaterial);
